@@ -1,0 +1,326 @@
+@page "/reportes"
+@using ContabilidadMundial.Data
+@using ContabilidadMundial.Models
+@using Microsoft.EntityFrameworkCore
+@inject ContabilidadContext Context
+
+<PageTitle>Reportes - Contabilidad Mundial</PageTitle>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb-4">
+                <i class="bi bi-graph-up"></i>
+                Reportes Contables
+            </h1>
+        </div>
+    </div>
+
+    <!-- Cards de reportes principales -->
+    <div class="row mb-4">
+        <div class="col-md-4 mb-3">
+            <div class="card h-100 border-primary">
+                <div class="card-body text-center">
+                    <i class="bi bi-bar-chart-line text-primary" style="font-size: 3rem;"></i>
+                    <h5 class="card-title mt-3">Balance General</h5>
+                    <p class="card-text">Estado de situación financiera con activos, pasivos y patrimonio.</p>
+                    <button class="btn btn-primary" @onclick="GenerarBalanceGeneral">
+                        <i class="bi bi-file-earmark-spreadsheet"></i>
+                        Generar Reporte
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card h-100 border-success">
+                <div class="card-body text-center">
+                    <i class="bi bi-graph-up-arrow text-success" style="font-size: 3rem;"></i>
+                    <h5 class="card-title mt-3">Estado de Resultados</h5>
+                    <p class="card-text">Ingresos, gastos y utilidad del período seleccionado.</p>
+                    <button class="btn btn-success" @onclick="GenerarEstadoResultados">
+                        <i class="bi bi-file-earmark-spreadsheet"></i>
+                        Generar Reporte
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card h-100 border-info">
+                <div class="card-body text-center">
+                    <i class="bi bi-cash-stack text-info" style="font-size: 3rem;"></i>
+                    <h5 class="card-title mt-3">Flujo de Efectivo</h5>
+                    <p class="card-text">Movimientos de efectivo por actividades operacionales.</p>
+                    <button class="btn btn-info" @onclick="GenerarFlujoEfectivo">
+                        <i class="bi bi-file-earmark-spreadsheet"></i>
+                        Generar Reporte
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reportes auxiliares -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="bi bi-list-check"></i> Reportes Auxiliares</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 col-lg-3 mb-3">
+                            <div class="d-grid">
+                                <button class="btn btn-outline-primary" @onclick="GenerarLibroMayor">
+                                    <i class="bi bi-book"></i><br>
+                                    Libro Mayor
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3 mb-3">
+                            <div class="d-grid">
+                                <button class="btn btn-outline-secondary" @onclick="GenerarBalanceComprobacion">
+                                    <i class="bi bi-calculator"></i><br>
+                                    Balance de Comprobación
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3 mb-3">
+                            <div class="d-grid">
+                                <button class="btn btn-outline-info" @onclick="GenerarLibroDiario">
+                                    <i class="bi bi-journal-text"></i><br>
+                                    Libro Diario
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3 mb-3">
+                            <div class="d-grid">
+                                <button class="btn btn-outline-warning" @onclick="GenerarReporteImpuestos">
+                                    <i class="bi bi-receipt"></i><br>
+                                    Reporte de Impuestos
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtros para reportes -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="bi bi-funnel"></i> Parámetros de Reportes</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label class="form-label">Empresa</label>
+                            <select class="form-select" @bind="empresaSeleccionada">
+                                <option value="">Todas las empresas</option>
+                                @foreach (var empresa in empresas)
+                                {
+                                    <option value="@empresa.Id">@empresa.Nombre</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Período</label>
+                            <select class="form-select" @bind="periodoSeleccionado">
+                                <option value="">Seleccionar período</option>
+                                @foreach (var periodo in periodos)
+                                {
+                                    <option value="@periodo.Id">@periodo.Descripcion</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Fecha Desde</label>
+                            <input type="date" class="form-control" @bind="fechaDesde">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Fecha Hasta</label>
+                            <input type="date" class="form-control" @bind="fechaHasta">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vista previa de datos -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="bi bi-eye"></i> Resumen de Cuentas</h5>
+                </div>
+                <div class="card-body">
+                    @if (resumenCuentas?.Count > 0)
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Tipo</th>
+                                        <th>Cantidad</th>
+                                        <th>Activas</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var grupo in resumenCuentas)
+                                    {
+                                        <tr>
+                                            <td>@grupo.Key</td>
+                                            <td>@grupo.Count()</td>
+                                            <td>@grupo.Count(c => c.Activa)</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-muted text-center py-3">
+                            <i class="bi bi-info-circle"></i>
+                            No hay datos para mostrar
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="bi bi-calendar3"></i> Actividad Reciente</h5>
+                </div>
+                <div class="card-body">
+                    @if (asientosRecientes?.Count > 0)
+                    {
+                        @foreach (var asiento in asientosRecientes)
+                        {
+                            <div class="mb-2 p-2 border-start border-primary border-3">
+                                <div class="d-flex justify-content-between">
+                                    <small class="text-muted">@asiento.Fecha.ToString("dd/MM/yyyy")</small>
+                                    <span class="badge bg-secondary">@asiento.Estado</span>
+                                </div>
+                                <div>
+                                    <strong>@asiento.Concepto</strong>
+                                </div>
+                                <small class="text-muted">
+                                    @asiento.TotalDebito.ToString("C") - @asiento.Empresa?.Nombre
+                                </small>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="text-muted text-center py-3">
+                            <i class="bi bi-clock-history"></i>
+                            No hay actividad reciente
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<Empresa> empresas = new();
+    private List<PeriodoContable> periodos = new();
+    private List<AsientoContable> asientosRecientes = new();
+    private List<IGrouping<string, CuentaContable>> resumenCuentas = new();
+    
+    private string empresaSeleccionada = "";
+    private string periodoSeleccionado = "";
+    private DateTime? fechaDesde;
+    private DateTime? fechaHasta;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarDatosAsync();
+    }
+
+    private async Task CargarDatosAsync()
+    {
+        try
+        {
+            empresas = await Context.Empresas
+                .Where(e => e.Activa)
+                .OrderBy(e => e.Nombre)
+                .ToListAsync();
+
+            periodos = await Context.PeriodosContables
+                .Include(p => p.Empresa)
+                .OrderByDescending(p => p.FechaInicio)
+                .ToListAsync();
+
+            asientosRecientes = await Context.AsientosContables
+                .Include(a => a.Empresa)
+                .OrderByDescending(a => a.FechaCreacion)
+                .Take(5)
+                .ToListAsync();
+
+            var cuentas = await Context.CuentasContables
+                .Where(c => c.Activa)
+                .ToListAsync();
+
+            resumenCuentas = cuentas.GroupBy(c => c.TipoCuenta).ToList();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error cargando datos: {ex.Message}");
+        }
+    }
+
+    private async Task GenerarBalanceGeneral()
+    {
+        // TODO: Implementar generación de Balance General
+        await MostrarMensaje("Balance General", "La funcionalidad de Balance General se implementará próximamente.");
+    }
+
+    private async Task GenerarEstadoResultados()
+    {
+        // TODO: Implementar generación de Estado de Resultados
+        await MostrarMensaje("Estado de Resultados", "La funcionalidad de Estado de Resultados se implementará próximamente.");
+    }
+
+    private async Task GenerarFlujoEfectivo()
+    {
+        // TODO: Implementar generación de Flujo de Efectivo
+        await MostrarMensaje("Flujo de Efectivo", "La funcionalidad de Flujo de Efectivo se implementará próximamente.");
+    }
+
+    private async Task GenerarLibroMayor()
+    {
+        await MostrarMensaje("Libro Mayor", "La funcionalidad de Libro Mayor se implementará próximamente.");
+    }
+
+    private async Task GenerarBalanceComprobacion()
+    {
+        await MostrarMensaje("Balance de Comprobación", "La funcionalidad de Balance de Comprobación se implementará próximamente.");
+    }
+
+    private async Task GenerarLibroDiario()
+    {
+        await MostrarMensaje("Libro Diario", "La funcionalidad de Libro Diario se implementará próximamente.");
+    }
+
+    private async Task GenerarReporteImpuestos()
+    {
+        await MostrarMensaje("Reporte de Impuestos", "La funcionalidad de Reporte de Impuestos se implementará próximamente.");
+    }
+
+    private async Task MostrarMensaje(string titulo, string mensaje)
+    {
+        // En una implementación real, usarías un modal o toast
+        Console.WriteLine($"{titulo}: {mensaje}");
+        await Task.CompletedTask;
+    }
+}
