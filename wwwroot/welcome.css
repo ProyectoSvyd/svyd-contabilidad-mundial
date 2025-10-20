@@ -1,0 +1,641 @@
+/* Reset y configuración base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    overflow-x: hidden;
+}
+
+/* Contenedor principal de bienvenida */
+.welcome-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Fondo de cielo y nubes - AQUÍ PONDREMOS TU HERMOSA FOTO */
+.sky-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><defs><linearGradient id="skyGradient" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:%234A90E2;stop-opacity:1" /><stop offset="30%" style="stop-color:%2387CEEB;stop-opacity:1" /><stop offset="70%" style="stop-color:%23B0E0E6;stop-opacity:1" /><stop offset="100%" style="stop-color:%23F0F8FF;stop-opacity:1" /></linearGradient></defs><rect width="1200" height="800" fill="url(%23skyGradient)"/></svg>') center/cover;
+    /* Por ahora usamos un gradiente de cielo, pero aquí pondremos tu foto */
+    z-index: -2;
+    animation: skyBreathing 8s ease-in-out infinite;
+}
+
+/* Cuando tengas tu foto lista, reemplaza el background por: */
+/* background: url('/images/cielo-nubes.jpg') center/cover no-repeat; */
+
+@keyframes skyBreathing {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    50% { transform: scale(1.02) rotate(0.1deg); }
+}
+
+/* Partículas flotantes mágicas */
+.floating-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 50%;
+    animation: floatParticle 15s linear infinite;
+    animation-delay: var(--delay);
+    left: var(--x);
+    top: var(--y);
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.5);
+}
+
+@keyframes floatParticle {
+    0% {
+        transform: translateY(100vh) translateX(0) scale(0);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+        transform: translateY(90vh) translateX(10px) scale(1);
+    }
+    90% {
+        opacity: 1;
+        transform: translateY(-10vh) translateX(-20px) scale(1);
+    }
+    100% {
+        transform: translateY(-20vh) translateX(-30px) scale(0);
+        opacity: 0;
+    }
+}
+
+/* Contenedor principal */
+.main-content {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 2rem;
+    height: 100vh;
+    padding: 2rem;
+    z-index: 10;
+    align-items: center;
+}
+
+/* Efectos de flotación para todos los elementos */
+.floating {
+    animation: float 6s ease-in-out infinite;
+    transform-style: preserve-3d;
+}
+
+@keyframes float {
+    0%, 100% { 
+        transform: translateY(0px) rotateX(0deg);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    }
+    50% { 
+        transform: translateY(-10px) rotateX(1deg);
+        box-shadow: 0 25px 40px rgba(0, 0, 0, 0.15);
+    }
+}
+
+/* Paneles laterales */
+.left-panel, .right-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.info-card {
+    background: rgba(255, 255, 255, 0.1);
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 2rem;
+    color: #ffffff;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    animation-delay: 0.5s;
+}
+
+.info-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #ffffff, #e8f4fd);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.info-text {
+    font-size: 1rem;
+    line-height: 1.6;
+    opacity: 0.9;
+}
+
+/* Features */
+.features {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    margin-top: 1.5rem;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.feature-icon {
+    font-size: 1.2rem;
+}
+
+/* Stats */
+.stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.stat-number {
+    display: block;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.stat-label {
+    display: block;
+    font-size: 0.8rem;
+    opacity: 0.8;
+    margin-top: 0.3rem;
+}
+
+/* Panel central - Formulario de login */
+.center-panel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-form-container {
+    background: rgba(255, 255, 255, 0.95);
+    -webkit-backdrop-filter: blur(30px);
+    backdrop-filter: blur(30px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 24px;
+    padding: 3rem 2.5rem;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.1),
+        0 8px 20px rgba(0, 0, 0, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    animation-delay: 0.2s;
+    position: relative;
+    overflow: hidden;
+}
+
+.login-form-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(135, 206, 235, 0.6), 
+        rgba(176, 224, 230, 0.6), 
+        transparent
+    );
+    animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+    0%, 100% { opacity: 0; transform: translateX(-100%); }
+    50% { opacity: 1; transform: translateX(100%); }
+}
+
+/* Logo SVYD */
+.svyd-logo {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+    animation: logoFloat 4s ease-in-out infinite;
+}
+
+@keyframes logoFloat {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-5px) scale(1.02); }
+}
+
+.logo-oval {
+    width: 80px;
+    height: 50px;
+    background: rgba(144, 238, 144, 0.2); /* Verde transparente para que se vean las nubes */
+    border: 2px solid rgba(34, 139, 34, 0.6);
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+}
+
+.logo-oval::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, 
+        rgba(144, 238, 144, 0.3),
+        rgba(34, 139, 34, 0.5),
+        rgba(144, 238, 144, 0.3)
+    );
+    border-radius: 50px;
+    z-index: -1;
+    animation: borderGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes borderGlow {
+    0% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.logo-text {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2d5a3d;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+    font-style: italic;
+}
+
+/* Título del formulario */
+.form-title {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(135deg, #2c3e50, #4a6741);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Formulario */
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.password-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.form-label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.3rem;
+}
+
+.forgot-link {
+    font-size: 0.8rem;
+    color: #0366d6;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.forgot-link:hover {
+    text-decoration: underline;
+}
+
+/* Inputs flotantes mágicos */
+.floating-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid rgba(209, 213, 219, 0.6);
+    border-radius: 12px;
+    font-size: 0.95rem;
+    background: rgba(255, 255, 255, 0.8);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    z-index: 1;
+}
+
+.floating-input:focus {
+    outline: none;
+    border-color: rgba(79, 172, 254, 0.8);
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 
+        0 0 0 3px rgba(79, 172, 254, 0.1),
+        0 4px 12px rgba(79, 172, 254, 0.15);
+    transform: translateY(-2px);
+    animation: inputFloat 0.3s ease-out;
+}
+
+@keyframes inputFloat {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+    100% { transform: translateY(-2px); }
+}
+
+.floating-input::placeholder {
+    color: #9ca3af;
+    transition: all 0.3s ease;
+}
+
+.floating-input:focus::placeholder {
+    color: transparent;
+    transform: translateY(-10px);
+}
+
+/* Botón de iniciar sesión */
+.signin-button {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.signin-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.2), 
+        transparent
+    );
+    transition: left 0.5s ease;
+}
+
+.signin-button:hover::before {
+    left: 100%;
+}
+
+.signin-button:hover {
+    background: linear-gradient(135deg, #16a34a, #15803d);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 25px rgba(34, 197, 94, 0.3);
+}
+
+.signin-button:active {
+    transform: translateY(0);
+}
+
+.signin-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Loading spinner */
+.loading-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Separador */
+.separator {
+    text-align: center;
+    margin: 1.5rem 0 1rem 0;
+    position: relative;
+    color: #6b7280;
+    font-size: 0.9rem;
+}
+
+.separator::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(to right, 
+        transparent, 
+        rgba(107, 114, 128, 0.3), 
+        transparent
+    );
+    z-index: 0;
+}
+
+.separator span {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 0 1rem;
+    position: relative;
+    z-index: 1;
+}
+
+/* Botones alternativos */
+.alt-button {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1.5px solid rgba(209, 213, 219, 0.8);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #374151;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+}
+
+.alt-button:hover {
+    background: rgba(249, 250, 251, 0.95);
+    border-color: rgba(156, 163, 175, 0.8);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.button-icon {
+    width: 18px;
+    height: 18px;
+}
+
+/* Enlaces adicionales */
+.additional-links {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(229, 231, 235, 0.5);
+}
+
+.signup-text {
+    font-size: 0.9rem;
+    color: #6b7280;
+    margin-bottom: 1rem;
+}
+
+.signup-link {
+    color: #0366d6;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.signup-link:hover {
+    text-decoration: underline;
+}
+
+.passkey-link {
+    font-size: 0.85rem;
+    color: #0366d6;
+    text-decoration: none;
+}
+
+.passkey-link:hover {
+    text-decoration: underline;
+}
+
+/* Mensaje de validación */
+.validation-message {
+    font-size: 0.8rem;
+    color: #dc2626;
+    margin-top: 0.2rem;
+    margin-left: 0.2rem;
+    opacity: 0;
+    animation: fadeInError 0.3s ease-out forwards;
+}
+
+@keyframes fadeInError {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .main-content {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        padding: 1rem;
+    }
+    
+    .left-panel, .right-panel {
+        display: none;
+    }
+    
+    .login-form-container {
+        max-width: 100%;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .login-form-container {
+        padding: 2rem 1.5rem;
+        margin: 1rem;
+        border-radius: 20px;
+    }
+    
+    .info-card {
+        padding: 1.5rem;
+    }
+    
+    .features {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Efectos especiales adicionales */
+@keyframes cloudFloat {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(10px); }
+}
+
+/* Hover effects especiales */
+.login-form-container:hover {
+    box-shadow: 
+        0 25px 80px rgba(0, 0, 0, 0.12),
+        0 12px 30px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+/* Transiciones suaves para todo */
+* {
+    transition: all 0.2s ease;
+}
+
+/* Efectos de profundidad */
+.floating:nth-child(odd) {
+    animation-delay: 0.3s;
+    animation-duration: 7s;
+}
+
+.floating:nth-child(even) {
+    animation-delay: 0.8s;
+    animation-duration: 5s;
+}
