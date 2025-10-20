@@ -1,0 +1,18 @@
+@page "/"
+@inject NavigationManager Navigation
+@code {
+    protected override void OnInitialized()
+    {
+        Navigation.NavigateTo("/welcome", forceLoad: true);
+    }
+}
+
+<!-- Fallback HTML si JavaScript está deshabilitado -->
+<script>
+    window.location.href = "/welcome";
+</script>
+
+<div style="text-align: center; margin-top: 2rem;">
+    <h2>🚀 Redirigiendo a SVYD...</h2>
+    <p>Si no eres redirigido automáticamente, <a href="/welcome">haz clic aquí</a>.</p>
+</div>
