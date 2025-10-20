@@ -1,0 +1,158 @@
+@page "/empresas"
+@using ContabilidadMundial.Data
+@using ContabilidadMundial.Models
+@using Microsoft.EntityFrameworkCore
+@inject ContabilidadContext DbContext
+@rendermode InteractiveServer
+
+<PageTitle>Empresas - Contabilidad Mundial</PageTitle>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Gestión de Empresas</h1>
+    <button class="btn btn-primary" @onclick="NuevaEmpresa">
+        <i class="fas fa-plus"></i> Nueva Empresa
+    </button>
+</div>
+
+@if (empresas == null)
+{
+    <div class="text-center">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Cargando...</span>
+        </div>
+        <p>Cargando empresas...</p>
+    </div>
+}
+else if (!empresas.Any())
+{
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle"></i> No hay empresas registradas. 
+        <button class="btn btn-link p-0" @onclick="NuevaEmpresa">Crear la primera empresa</button>
+    </div>
+}
+else
+{
+    <div class="row">
+        @foreach (var empresa in empresas)
+        {
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">@empresa.Nombre</h5>
+                        @if (empresa.Activa)
+                        {
+                            <span class="badge bg-success">Activa</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">Inactiva</span>
+                        }
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">
+                            <strong>Código Fiscal:</strong> @empresa.CodigoFiscal<br>
+                            <strong>País:</strong> @empresa.PaisBase<br>
+                            <strong>Moneda:</strong> @empresa.MonedaBase
+                        </p>
+                        
+                        @if (!string.IsNullOrEmpty(empresa.Email))
+                        {
+                            <p class="card-text">
+                                <i class="fas fa-envelope"></i> @empresa.Email
+                            </p>
+                        }
+                        
+                        @if (!string.IsNullOrEmpty(empresa.Telefono))
+                        {
+                            <p class="card-text">
+                                <i class="fas fa-phone"></i> @empresa.Telefono
+                            </p>
+                        }
+                        
+                        <small class="text-muted">
+                            Creada: @empresa.FechaCreacion.ToString("dd/MM/yyyy")
+                        </small>
+                    </div>
+                    <div class="card-footer">
+                        <div class="btn-group w-100" role="group">
+                            <button class="btn btn-outline-primary btn-sm" @onclick="() => VerEmpresa(empresa.Id)">
+                                <i class="fas fa-eye"></i> Ver
+                            </button>
+                            <button class="btn btn-outline-secondary btn-sm" @onclick="() => EditarEmpresa(empresa.Id)">
+                                <i class="fas fa-edit"></i> Editar
+                            </button>
+                            <button class="btn btn-outline-info btn-sm" @onclick="() => VerSucursales(empresa.Id)">
+                                <i class="fas fa-building"></i> Sucursales (@empresa.Sucursales.Count)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private List<Empresa>? empresas;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarEmpresas();
+    }
+
+    private async Task CargarEmpresas()
+    {
+        try
+        {
+            empresas = await DbContext.Empresas
+                .Include(e => e.Sucursales)
+                .OrderBy(e => e.Nombre)
+                .ToListAsync();
+        }
+        catch (Exception ex)
+        {
+            // En un entorno real, aquí usarías un servicio de logging
+            Console.WriteLine($"Error al cargar empresas: {ex.Message}");
+            empresas = new List<Empresa>();
+        }
+    }
+
+    private async Task NuevaEmpresa()
+    {
+        // Implementar navegación a página de creación de empresa
+        // navigation.NavigateTo("/empresas/nueva");
+    }
+
+    private async Task VerEmpresa(int empresaId)
+    {
+        // Implementar navegación a página de detalle de empresa
+        // navigation.NavigateTo($"/empresas/{empresaId}");
+    }
+
+    private async Task EditarEmpresa(int empresaId)
+    {
+        // Implementar navegación a página de edición de empresa
+        // navigation.NavigateTo($"/empresas/{empresaId}/editar");
+    }
+
+    private async Task VerSucursales(int empresaId)
+    {
+        // Implementar navegación a página de sucursales de la empresa
+        // navigation.NavigateTo($"/empresas/{empresaId}/sucursales");
+    }
+}
+
+<style>
+    .card {
+        transition: transform 0.2s;
+    }
+    
+    .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    .badge {
+        font-size: 0.75em;
+    }
+</style>
