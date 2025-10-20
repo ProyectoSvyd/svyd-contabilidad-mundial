@@ -29,13 +29,13 @@ jobs:
         dotnet-version: ${{ env.DOTNET_VERSION }}
 
     - name: 'Restore dependencies'
-      run: dotnet restore
+      run: dotnet restore SvydProyectoMundial.sln
 
     - name: 'Build application'
-      run: dotnet build --configuration Release --no-restore
+      run: dotnet build SvydProyectoMundial.sln --configuration Release --no-restore
 
     - name: 'Publish application'
-      run: dotnet publish -c Release -o ./publish
+      run: dotnet publish SvydProyectoMundial.sln -c Release -o ./publish
 
     - name: 'Upload artifact for deployment job'
       uses: actions/upload-artifact@v4
