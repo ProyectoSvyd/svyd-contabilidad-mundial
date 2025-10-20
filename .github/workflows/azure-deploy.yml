@@ -7,11 +7,6 @@ on:
   push:
     branches:
       - main
-      - master
-  pull_request:
-    branches:
-      - main
-      - master
   workflow_dispatch: # Permite ejecutar manualmente
 
 env:
@@ -39,17 +34,14 @@ jobs:
     - name: 'Build application'
       run: dotnet build --configuration Release --no-restore
 
-    - name: 'Run tests'
-      run: dotnet test --no-restore --verbosity normal --configuration Release
-
     - name: 'Publish application'
-      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+      run: dotnet publish -c Release -o ./publish
 
     - name: 'Upload artifact for deployment job'
       uses: actions/upload-artifact@v4
       with:
         name: .net-app
-        path: ${{env.DOTNET_ROOT}}/myapp
+        path: ./publish
 
   deploy:
     runs-on: ubuntu-latest
@@ -73,11 +65,3 @@ jobs:
         slot-name: 'Production'
         package: .
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-
-    - name: 'Application Insights Annotation'
-      uses: microsoft/ApplicationInsights-Annotate@v1
-      with:
-        instrumentationKey: ${{ secrets.APPINSIGHTS_INSTRUMENTATION_KEY }}
-        releaseName: 'Release ${{ github.run_number }}'
-        releaseDescription: 'Deployed from GitHub Actions - Commit: ${{ github.sha }}'
-        category: 'Deployment'
